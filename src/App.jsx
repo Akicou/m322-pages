@@ -8,6 +8,8 @@ import { PrivacyPage } from "./pages/PrivacyPage";
 import { AboutPage } from "./pages/AboutPage";
 import { FaqPage } from "./pages/FaqPage";
 import { ReferencesPage } from "./pages/ReferencesPage";
+import { ImpressumPage } from "./pages/ImpressumPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 import { ScrollToTop } from "./components/ScrollToTop";
 
 export default function App() {
@@ -23,7 +25,9 @@ export default function App() {
           <Route path="/ueber-uns" element={<AboutPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/referenzen" element={<ReferencesPage />} />
+          <Route path="/impressum" element={<ImpressumPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </>
