@@ -592,7 +592,7 @@ export const translations = {
 
   fr: {
     nav: {
-      fonctionnalités: "Fonctions", problèmes: "Problèmes & Solutions", confidentialité: "Confidentialité", à_propos: "À propos",
+      funktionen: "Fonctions", probleme: "Problèmes & Solutions", datenschutz: "Confidentialité", ueber: "À propos",
       cta: "Démo", menu: "Menu", ctaArrow: "Demander une démo →",
       footer1: "Conforme RGPD & LPD", footer2: "Serveurs 100% en Suisse",
       burgerOpen: "Fermer le menu", burgerClose: "Ouvrir le menu",
