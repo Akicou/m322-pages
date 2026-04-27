@@ -1,139 +1,53 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { faqItems } from "../data/faq";
 import { FaqList } from "../components/FaqList";
 import { PageHeader } from "../components/PageHeader";
 import { FinalCta } from "../components/FinalCta";
 import { publicUrl } from "../utils/publicUrl";
-
-const painBlocks = [
-  {
-    reverse: false,
-    painLabel: "Problem 01",
-    painTitle: "SOAP-Dokumentation frisst Ihre Zeit",
-    painP:
-      "Nach einem vollen Praxistag verbringen viele Ärztinnen und Ärzte bis zu 2 Stunden zusätzlich mit der Nacherfassung von Patientennotizen.",
-    painImage: publicUrl("images/problem-stress.png"),
-    painItems: [
-      "Handschriftliche Notizen müssen digital nacherfasst werden",
-      "Keine einheitliche Struktur – jeder Arzt dokumentiert anders",
-      "Wichtige Details gehen im Stress vergessen",
-      "Spät abends noch am Computer – keine Work-Life-Balance",
-    ],
-    solTitle: "Strukturierte SOAP-Vorlagen – Klick statt Tippen",
-    solP:
-      "Vorgefertigte Bausteine für die häufigsten Konsultationsarten. Sie wählen, ergänzen und speichern – keine KI, keine automatischen Vorschläge, volle ärztliche Kontrolle.",
-    solItems: [
-      "Geprüfte Textbausteine direkt im Behandlungszimmer",
-      "Eigene Vorlagen pro Arzt und pro Praxis anlegbar",
-      "Konsistente Dokumentationsqualität im ganzen Team",
-      "Durchschnittlich 18 Minuten täglich eingespart",
-    ],
-  },
-  {
-    reverse: true,
-    painLabel: "Problem 02",
-    painTitle: "Datenschutz-Unsicherheit blockiert Entscheidungen",
-    painP:
-      "DSGVO, Schweizer DSG, ärztliche Schweigepflicht – die rechtlichen Anforderungen sind komplex. US-basierte Tools bieten keine Rechtssicherheit.",
-    painImage: publicUrl("images/problem-security.png"),
-    painItems: [
-      "Unklar, ob Cloud-Lösungen DSGVO-konform sind",
-      "Haftungsrisiko bei Datenpannen ist unklar",
-      "US-HIPAA ist kein Ersatz für europäisches Datenschutzrecht",
-      "Veraltete Systeme aus Angst vor Neuem",
-    ],
-    solTitle: "DSGVO als oberstes Designprinzip – nicht als Checkbox",
-    solP:
-      "Yes-Doc wurde von Anfang an für den europäischen Rechtsraum entwickelt. Serverstandort ausschliesslich Schweiz, keine Daten in US-Rechenzentren.",
-    solItems: [
-      "Serverstandort 100% Schweiz (Zürich)",
-      "DSGVO & Schweizer DSG vollständig erfüllt",
-      "Ärztliche Schweigepflicht technisch eingebettet",
-      "Kostenlose Datenschutz-Beratung bei Einführung",
-    ],
-  },
-  {
-    reverse: false,
-    painLabel: "Problem 03",
-    painTitle: "Angst vor Datenmigration und Umstellung",
-    painP:
-      "Ein Systemwechsel bedeutet in der Vorstellung vieler Praxen: Wochen Aufwand, Schulungen, möglicher Datenverlust, gestresstes Team.",
-    painImage: publicUrl("images/problem-migration.png"),
-    painItems: [
-      "Jahrelange Patientendaten könnten verloren gehen",
-      "Team muss intensiv neu geschult werden",
-      "Praxisbetrieb könnte während Umstellung leiden",
-      "Hoher zeitlicher Aufwand für Praxisinhaber/innen",
-    ],
-    solTitle: "Migration in 1 Tag – wir übernehmen alles",
-    solP:
-      "Unser Migrations-Team führt die komplette Datenübernahme durch. Kein Datenverlust, keine Downtime, Team eingearbeitet in 2 Stunden.",
-    solItems: [
-      "Persönlicher Migrations-Coach Ihnen zugeteilt",
-      "Vollständige Datenübernahme aus allen gängigen Systemen",
-      "2-Stunden-Teamschulung inklusive",
-      "30 Tage Support nach Einführung garantiert",
-    ],
-  },
-];
-
-const tableRows = [
-  ["SOAP-Dokumentation", "Frei tippen, zeitaufwändig", "Strukturierte Vorlagen, ohne KI"],
-  ["Serverstandort", "Oft USA/international", "100% Schweiz (Zürich)"],
-  ["DSGVO-Konformität", "Unklar oder nicht vorhanden", "Vollständig zertifiziert"],
-  ["Mobile Nutzung", "Eingeschränkt oder keine", "iPad, Smartphone, Desktop"],
-  ["Offline-Modus", "Nicht verfügbar", "Vollständig offline-fähig"],
-  ["Migration", "Wochen, grosser Aufwand", "1 Tag, wir übernehmen alles"],
-  ["Support", "Ticket-System, langsam", "Persönlicher Ansprechpartner"],
-];
-
-const steps = [
-  {
-    n: "1",
-    t: "Demo buchen",
-    p: "30-minütige Live-Demo mit Ihrem persönlichen Berater. Keine Verkaufsgespräche, nur echte Antworten.",
-  },
-  {
-    n: "2",
-    t: "Daten migrieren",
-    p: "Wir übernehmen die komplette Migration. Sie müssen nichts tun. Dauer: maximal 1 Arbeitstag.",
-  },
-  {
-    n: "3",
-    t: "Team einführen",
-    p: "2-stündige Schulung für Ihr Team. Danach können alle sofort produktiv arbeiten.",
-  },
-  {
-    n: "4",
-    t: "Zeit sparen",
-    p: "Ab dem ersten Tag weniger Dokumentationsaufwand. Messbar, spürbar, nachhaltig.",
-  },
-];
+import { useLang } from "../i18n/LanguageContext";
 
 export function ProblemsPage() {
+  const { t } = useLang();
+
   useEffect(() => {
     document.title = "Probleme & Lösungen – Yes-Doc";
   }, []);
 
+  const painBlocks = [
+    { reverse: false, painLabel: t.problemsPage.b1Label, painTitle: t.problemsPage.b1Title, painP: t.problemsPage.b1P, painImage: publicUrl("images/problem-stress.png"), painItems: t.problemsPage.b1i, solTitle: t.problemsPage.b1sTitle, solP: t.problemsPage.b1sP, solItems: t.problemsPage.b1sI },
+    { reverse: true, painLabel: t.problemsPage.b2Label, painTitle: t.problemsPage.b2Title, painP: t.problemsPage.b2P, painImage: publicUrl("images/problem-security.png"), painItems: t.problemsPage.b2i, solTitle: t.problemsPage.b2sTitle, solP: t.problemsPage.b2sP, solItems: t.problemsPage.b2sI },
+    { reverse: false, painLabel: t.problemsPage.b3Label, painTitle: t.problemsPage.b3Title, painP: t.problemsPage.b3P, painImage: publicUrl("images/problem-migration.png"), painItems: t.problemsPage.b3i, solTitle: t.problemsPage.b3sTitle, solP: t.problemsPage.b3sP, solItems: t.problemsPage.b3sI },
+  ];
+
+  const tableRows = t.problemsPage.compRows;
+  const steps = t.problemsPage.steps;
+
+  const renderStatLabel = (s) =>
+    s.split("\n").map((line, i, arr) => (
+      <span key={i}>
+        {line}
+        {i < arr.length - 1 && <br />}
+      </span>
+    ));
+
   return (
     <main className="problems-page">
       <PageHeader
-        crumb="Probleme & Lösungen"
+        crumb={t.problemsPage.crumb}
         title={
           <>
-            Wir kennen Ihren Praxisalltag.
+            {t.problemsPage.title1}
             <br />
-            Und haben die Antwort darauf.
+            {t.problemsPage.title2}
           </>
         }
-        lead="Die häufigsten Herausforderungen für Praxisinhabende – und wie Yes-Doc sie konkret löst. Keine Marketing-Versprechen, nur messbare Resultate."
+        lead={t.problemsPage.lead}
       />
 
       <section className="section">
         <div className="section-inner">
-          <div className="section-label">Problem → Lösung</div>
-          <h2 className="section-title">Was Sie täglich bremst – und was wir dagegen tun</h2>
+          <div className="section-label">{t.problemsPage.label1}</div>
+          <h2 className="section-title">{t.problemsPage.title1b}</h2>
 
           {painBlocks.map((b) => (
             <div
@@ -178,50 +92,34 @@ export function ProblemsPage() {
         <div className="stats-inner">
           <div className="stat-item">
             <div className="stat-num">18&apos;</div>
-            <div className="stat-label">
-              Durchschnittlich eingesparte
-              <br />
-              Minuten pro Tag
-            </div>
+            <div className="stat-label">{renderStatLabel(t.problemsPage.stat1)}</div>
           </div>
           <div className="stat-item">
             <div className="stat-num">1 Tag</div>
-            <div className="stat-label">
-              Bis zur vollständigen
-              <br />
-              Inbetriebnahme
-            </div>
+            <div className="stat-label">{renderStatLabel(t.problemsPage.stat2)}</div>
           </div>
           <div className="stat-item">
             <div className="stat-num">200+</div>
-            <div className="stat-label">
-              Arztpraxen vertrauen
-              <br />
-              auf Yes-Doc
-            </div>
+            <div className="stat-label">{renderStatLabel(t.problemsPage.stat3)}</div>
           </div>
           <div className="stat-item">
             <div className="stat-num">0</div>
-            <div className="stat-label">
-              Datenpannen seit
-              <br />
-              Gründung
-            </div>
+            <div className="stat-label">{renderStatLabel(t.problemsPage.stat4)}</div>
           </div>
         </div>
       </div>
 
       <section className="section comparison-section">
         <div className="section-inner">
-          <div className="section-label">Vergleich</div>
-          <h2 className="section-title">Yes-Doc vs. bisherige Systeme</h2>
+          <div className="section-label">{t.problemsPage.compLabel}</div>
+          <h2 className="section-title">{t.problemsPage.compTitle}</h2>
           <div className="comp-table-wrap">
           <table className="comp-table">
             <thead>
               <tr>
                 <th />
-                <th>Veraltete Praxissoftware</th>
-                <th>Yes-Doc</th>
+                <th>{t.problemsPage.compTh1}</th>
+                <th>{t.problemsPage.compTh2}</th>
               </tr>
             </thead>
             <tbody>
@@ -240,8 +138,8 @@ export function ProblemsPage() {
 
       <section className="section">
         <div className="section-inner">
-          <div className="section-label">So funktioniert&apos;s</div>
-          <h2 className="section-title">Von der Demo bis zum ersten gesparten Abend</h2>
+          <div className="section-label">{t.problemsPage.stepsLabel}</div>
+          <h2 className="section-title">{t.problemsPage.stepsTitle}</h2>
           <div className="steps">
             {steps.map((s) => (
               <div className="step" key={s.n}>
@@ -256,12 +154,12 @@ export function ProblemsPage() {
 
       <section className="section faq-section-bg">
         <div className="section-inner">
-          <div className="section-label">FAQ</div>
-          <h2 className="section-title">Häufige Fragen zur Einführung</h2>
-          <FaqList items={faqItems.slice(0, 5)} />
+          <div className="section-label">{t.problemsPage.faqLabel}</div>
+          <h2 className="section-title">{t.problemsPage.faqTitle}</h2>
+          <FaqList items={t.faqItems.slice(0, 5)} />
           <div style={{ textAlign: "center", marginTop: "2rem" }}>
             <Link to="/faq" className="btn-secondary">
-              Alle Fragen ansehen →
+              {t.problemsPage.faqBtn}
             </Link>
           </div>
         </div>

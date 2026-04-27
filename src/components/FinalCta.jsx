@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useLang } from "../i18n/LanguageContext";
 
 /**
  * Centered final CTA used at the bottom of sub-pages.
@@ -9,23 +10,22 @@ import { Link } from "react-router-dom";
  *   showBack?: boolean,
  * }} props
  */
-export function FinalCta({
-  title = "Überzeugt? Dann sprechen wir.",
-  sub = "Buchen Sie eine kostenlose Demo – 30 Minuten, keine Verkaufsgespräche, echte Antworten.",
-  showBack = true,
-}) {
+export function FinalCta({ title, sub, showBack = true }) {
+  const { t } = useLang();
+  const finalTitle = title ?? t.common.ctaTitle;
+  const finalSub = sub ?? t.common.ctaSub;
   return (
     <section className="cta-section">
       <div className="cta-inner cta-inner--center">
-        <h2>{title}</h2>
-        <p>{sub}</p>
+        <h2>{finalTitle}</h2>
+        <p>{finalSub}</p>
         <div className="cta-btns cta-btns--row">
           <Link to="/contact" className="btn-primary">
-            Demo buchen →
+            {t.common.ctaBtn}
           </Link>
           {showBack ? (
             <Link to="/" className="btn-outline">
-              ← Zurück zur Startseite
+              {t.common.back}
             </Link>
           ) : null}
         </div>

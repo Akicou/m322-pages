@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useLang } from "../i18n/LanguageContext";
 
 /**
  * Shared sub-page header (slate background, breadcrumb, h1, lead).
@@ -10,11 +11,12 @@ import { Link } from "react-router-dom";
  * }} props
  */
 export function PageHeader({ crumb, title, lead }) {
+  const { t } = useLang();
   return (
     <div className="page-header">
       <div className="page-header-inner">
         <div className="breadcrumb">
-          <Link to="/">Startseite</Link>
+          <Link to="/">{t.common.startseite}</Link>
           <span>›</span>
           <span>{crumb}</span>
         </div>

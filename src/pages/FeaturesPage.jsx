@@ -2,32 +2,40 @@ import { useEffect } from "react";
 import { features } from "../data/features";
 import { PageHeader } from "../components/PageHeader";
 import { FinalCta } from "../components/FinalCta";
+import { useLang } from "../i18n/LanguageContext";
 
 export function FeaturesPage() {
+  const { t } = useLang();
+
   useEffect(() => {
     document.title = "Funktionen – Yes-Doc";
   }, []);
 
+  const tFeatures = t.featuresPage.features.map((f) => {
+    const orig = features.find((x) => x.id === f.id);
+    return { ...f, icon: orig?.icon };
+  });
+
   return (
     <main>
       <PageHeader
-        crumb="Funktionen"
+        crumb={t.featuresPage.crumb}
         title={
           <>
-            Pragmatische Funktionen.
+            {t.featuresPage.title1}
             <br />
-            Klar gedacht für den Praxisalltag.
+            {t.featuresPage.title2}
           </>
         }
-        lead="Keine Spielereien, keine KI-Modelle, kein Marketing-Lametta. Nur Werkzeuge, die Praxisinhabende täglich entlasten – ohne Kompromisse beim Datenschutz."
+        lead={t.featuresPage.lead}
       />
 
       <section className="section">
         <div className="section-inner">
-          <div className="section-label">Im Detail</div>
-          <h2 className="section-title">Sechs Bausteine, die zusammenpassen</h2>
+          <div className="section-label">{t.featuresPage.label1}</div>
+          <h2 className="section-title">{t.featuresPage.title1b}</h2>
           <div className="features-detail-grid">
-            {features.map((f) => (
+            {tFeatures.map((f) => (
               <article className="feature-detail" key={f.id} id={f.id}>
                 <div className="feature-icon">{f.icon}</div>
                 <h3>{f.title}</h3>
@@ -41,27 +49,10 @@ export function FeaturesPage() {
 
       <section className="section features-bg">
         <div className="section-inner">
-          <div className="section-label">Was Yes-Doc bewusst <em>nicht</em> tut</div>
-          <h2 className="section-title">Bewusst weggelassen.</h2>
+          <div className="section-label">{t.featuresPage.label2}</div>
+          <h2 className="section-title">{t.featuresPage.title2b}</h2>
           <div className="not-grid">
-            {[
-              {
-                title: "Keine KI-Diagnose",
-                text: "Keine automatische Diagnose, kein Modell, das Patientendaten analysiert. Sie entscheiden, Yes-Doc dokumentiert nur.",
-              },
-              {
-                title: "Keine US-Server",
-                text: "Keine Daten in US-Rechenzentren. Kein CLOUD Act. Serverstandort ausschliesslich Schweiz (Zürich).",
-              },
-              {
-                title: "Keine Datenweitergabe",
-                text: "Keine Werbe-Tracker, kein Verkauf an Dritte, kein Re-Identification-Risiko durch externe Dienste.",
-              },
-              {
-                title: "Kein Feature-Bloat",
-                text: "Keine 200 Funktionen, die niemand nutzt. Wir konzentrieren uns auf das, was Hausarztpraxen wirklich brauchen.",
-              },
-            ].map((x) => (
+            {t.featuresPage.notCards.map((x) => (
               <div className="not-card" key={x.title}>
                 <h3>{x.title}</h3>
                 <p>{x.text}</p>

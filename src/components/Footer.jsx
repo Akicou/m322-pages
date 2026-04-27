@@ -1,31 +1,34 @@
 import { Link, NavLink } from "react-router-dom";
-
-const columns = [
-  {
-    heading: "Produkt",
-    links: [
-      { to: "/funktionen", label: "Funktionen" },
-      { to: "/problems", label: "Probleme & Lösungen" },
-      { to: "/referenzen", label: "Referenzen" },
-    ],
-  },
-  {
-    heading: "Vertrauen",
-    links: [
-      { to: "/datenschutz", label: "Datenschutz & Sicherheit" },
-      { to: "/faq", label: "FAQ" },
-    ],
-  },
-  {
-    heading: "Unternehmen",
-    links: [
-      { to: "/ueber-uns", label: "Über uns" },
-      { to: "/contact", label: "Kontakt & Demo" },
-    ],
-  },
-];
+import { useLang } from "../i18n/LanguageContext";
 
 export function Footer() {
+  const { t } = useLang();
+
+  const columns = [
+    {
+      heading: t.footer.col1,
+      links: [
+        { to: "/funktionen", label: t.nav.funktionen },
+        { to: "/problems", label: t.nav.probleme },
+        { to: "/referenzen", label: t.footer.referenzen },
+      ],
+    },
+    {
+      heading: t.footer.col2,
+      links: [
+        { to: "/datenschutz", label: t.footer.datenschutz },
+        { to: "/faq", label: t.footer.faq },
+      ],
+    },
+    {
+      heading: t.footer.col3,
+      links: [
+        { to: "/ueber-uns", label: t.nav.ueber },
+        { to: "/contact", label: t.footer.kontakt },
+      ],
+    },
+  ];
+
   return (
     <footer>
       <div className="footer-grid">
@@ -33,9 +36,7 @@ export function Footer() {
           <Link to="/" className="footer-logo">
             Yes-<span>Doc</span>
           </Link>
-          <p className="footer-tagline">
-            Schweizer Praxissoftware. Pragmatisch, sicher, ohne KI auf Patientendaten.
-          </p>
+          <p className="footer-tagline">{t.footer.tagline}</p>
         </div>
         {columns.map((col) => (
           <div className="footer-col" key={col.heading}>
@@ -58,8 +59,8 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
-          <span>© 2025 Yes-Doc · Zürich, Schweiz</span>
-          <span>Alle Daten bleiben in der Schweiz</span>
+          <span>{t.footer.copyright}</span>
+          <span>{t.footer.servers}</span>
         </div>
       </div>
     </footer>

@@ -2,58 +2,23 @@ import { useEffect } from "react";
 import { PageHeader } from "../components/PageHeader";
 import { FinalCta } from "../components/FinalCta";
 import { publicUrl } from "../utils/publicUrl";
-
-const team = [
-  {
-    name: "Dr. med. Matthias Brunner",
-    role: "Co-Founder, Medizinische Leitung",
-    bio: "15 Jahre Hausarztpraxis in Bern. Versteht den Schmerz der manuellen SOAP-Dokumentation aus erster Hand.",
-    image: publicUrl("images/team-matthias.png"),
-  },
-  {
-    name: "Lina Wyss",
-    role: "Co-Founder, Produkt & Datenschutz",
-    bio: "Vorher Datenschutzbeauftragte bei einer Schweizer Privatklinik. Spezialisiert auf DSGVO im Gesundheitswesen.",
-    image: publicUrl("images/team-lina.png"),
-  },
-  {
-    name: "Tobias Keller",
-    role: "Lead Engineer",
-    bio: "Aufgewachsen mit Schweizer Software-Engineering. Baut Yes-Doc nach Prinzipien, die auch in 10 Jahren noch tragen.",
-    image: publicUrl("images/team-tobias.png"),
-  },
-  {
-    name: "Sara Petrov",
-    role: "Customer Success",
-    bio: "Begleitet Praxen von der Demo bis zur produktiven Nutzung. Kennt jedes gängige Schweizer Bestandssystem.",
-    image: publicUrl("images/team-sara.png"),
-  },
-];
-
-const values = [
-  {
-    n: "01",
-    t: "Pragmatisch, nicht verspielt",
-    p: "Wir bauen Software für Ärzte mit 40+ Patienten am Tag, nicht für Demos auf Konferenzen. Jede Funktion muss sich im Praxisalltag bewähren.",
-  },
-  {
-    n: "02",
-    t: "Datenschutz ohne Diskussion",
-    p: "Wir wagen keine Kompromisse bei Patientendaten. Lieber bauen wir eine Funktion nicht, als sie auf Kosten der Sicherheit zu liefern.",
-  },
-  {
-    n: "03",
-    t: "Ehrliche Kommunikation",
-    p: "Was wir nicht können, sagen wir. Was wir nicht tun, ebenfalls. Marketing-Versprechen sind in der Medizin gefährlich.",
-  },
-  {
-    n: "04",
-    t: "Schweizer Qualität",
-    p: "Code aus Zürich, Server in Zürich, Support auf Deutsch und Französisch. Keine Subunternehmer in Niedriglohn-Ländern.",
-  },
-];
+import { useLang } from "../i18n/LanguageContext";
 
 export function AboutPage() {
+  const { t } = useLang();
+
+  const teamImages = [
+    publicUrl("images/team-matthias.png"),
+    publicUrl("images/team-lina.png"),
+    publicUrl("images/team-tobias.png"),
+    publicUrl("images/team-sara.png"),
+  ];
+
+  const team = t.aboutPage.team.map((p, i) => ({ ...p, image: teamImages[i] }));
+  const values = t.aboutPage.values;
+  const stats = t.aboutPage.stats;
+  const storyP = t.aboutPage.storyP;
+
   useEffect(() => {
     document.title = "Über uns – Yes-Doc";
   }, []);
@@ -61,55 +26,31 @@ export function AboutPage() {
   return (
     <main>
       <PageHeader
-        crumb="Über uns"
-        title="Wer hinter Yes-Doc steht."
-        lead="Ein kleines Team aus Zürich. Halb Mediziner, halb Software-Ingenieure. Eine gemeinsame Überzeugung: Schweizer Praxen verdienen bessere Werkzeuge – ohne Cloud-Hype, ohne KI-Versprechen, ohne US-Risiko."
+        crumb={t.aboutPage.crumb}
+        title={t.aboutPage.title}
+        lead={t.aboutPage.lead}
       />
 
       <section className="section">
         <div className="section-inner">
-          <div className="section-label">Unsere Geschichte</div>
-          <h2 className="section-title">Aus Frust geboren. Aus Praxis gewachsen.</h2>
+          <div className="section-label">{t.aboutPage.storyLabel}</div>
+          <h2 className="section-title">{t.aboutPage.storyTitle}</h2>
           <div className="story-grid">
             <div className="story-text">
               <div style={{ marginBottom: "2rem", borderRadius: "12px", overflow: "hidden" }}>
                 <img src={publicUrl("images/hero-doctor.png")} alt="Doctor" style={{ width: "100%", display: "block" }} />
               </div>
-              <p>
-                2022 sass Matthias an einem Mittwochabend nach einem 12-Stunden-Tag noch zwei
-                Stunden vor dem Computer und tippte SOAP-Notizen in ein veraltetes System. Er
-                sprach mit Lina, die gerade Datenschutz-Audits für Kliniken durchführte – und
-                stellte fest: Es gibt keine Schweizer Praxissoftware, die <em>beides</em> richtig
-                macht: pragmatische Bedienung <em>und</em> kompromisslosen Datenschutz.
-              </p>
-              <p>
-                Also haben wir sie gebaut. Yes-Doc startete 2023 mit fünf Pilotpraxen im Raum
-                Zürich. Heute arbeiten über 200 Schweizer Praxen damit. Wir wachsen langsam,
-                bewusst und nur so schnell, wie wir die Qualität halten können.
-              </p>
-              <p>
-                Wir sind kein Venture-Capital-Unicorn auf der Jagd nach Bewertung. Wir sind
-                vier Leute mit einem klaren Ziel: Schweizer Praxen entlasten, ohne dafür
-                Patientendaten zu opfern.
-              </p>
+              {storyP.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
             </div>
             <div className="story-stats">
-              <div className="story-stat">
-                <div className="story-stat-num">2023</div>
-                <div className="story-stat-label">Gegründet in Zürich</div>
-              </div>
-              <div className="story-stat">
-                <div className="story-stat-num">200+</div>
-                <div className="story-stat-label">Aktive Praxen</div>
-              </div>
-              <div className="story-stat">
-                <div className="story-stat-num">4</div>
-                <div className="story-stat-label">Köpfe im Team</div>
-              </div>
-              <div className="story-stat">
-                <div className="story-stat-num">0</div>
-                <div className="story-stat-label">Datenpannen</div>
-              </div>
+              {stats.map(([num, label]) => (
+                <div className="story-stat" key={label}>
+                  <div className="story-stat-num">{num}</div>
+                  <div className="story-stat-label">{label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -117,8 +58,8 @@ export function AboutPage() {
 
       <section className="section features-bg">
         <div className="section-inner">
-          <div className="section-label">Werte</div>
-          <h2 className="section-title">Vier Überzeugungen, die uns leiten</h2>
+          <div className="section-label">{t.aboutPage.valuesLabel}</div>
+          <h2 className="section-title">{t.aboutPage.valuesTitle}</h2>
           <div className="values-grid">
             {values.map((v) => (
               <div className="value-card" key={v.n}>
@@ -133,8 +74,8 @@ export function AboutPage() {
 
       <section className="section">
         <div className="section-inner">
-          <div className="section-label">Team</div>
-          <h2 className="section-title">Die Menschen hinter Yes-Doc</h2>
+          <div className="section-label">{t.aboutPage.teamLabel}</div>
+          <h2 className="section-title">{t.aboutPage.teamTitle}</h2>
           <div className="team-grid">
             {team.map((p) => (
               <div className="team-card" key={p.name}>
@@ -155,8 +96,8 @@ export function AboutPage() {
       </section>
 
       <FinalCta
-        title="Lust, mit uns zu arbeiten?"
-        sub="Wir suchen ständig Praxen, die uns ehrliches Feedback geben. Sprechen Sie uns an – auch ohne Demo-Wunsch."
+        title={t.aboutPage.ctaTitle}
+        sub={t.aboutPage.ctaSub}
         showBack={false}
       />
     </main>

@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useLang } from "../i18n/LanguageContext";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ContactPage() {
+  const { t } = useLang();
+  const c = t.contactPage;
+
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
@@ -23,13 +27,13 @@ export function ContactPage() {
 
   function validate() {
     const e = {};
-    if (!fname.trim()) e.fname = "Bitte geben Sie Ihren Vornamen ein.";
-    if (!lname.trim()) e.lname = "Bitte geben Sie Ihren Nachnamen ein.";
+    if (!fname.trim()) e.fname = c.errFname;
+    if (!lname.trim()) e.lname = c.errLname;
     const em = email.trim();
-    if (!em) e.email = "Bitte geben Sie Ihre E-Mail-Adresse ein.";
-    else if (!EMAIL_RE.test(em)) e.email = "Bitte geben Sie eine gültige E-Mail-Adresse ein.";
-    if (!praxis.trim()) e.praxis = "Bitte geben Sie den Praxisnamen ein.";
-    if (!privacy) e.privacy = "Bitte stimmen Sie der Datenschutzerklärung zu.";
+    if (!em) e.email = c.errEmail;
+    else if (!EMAIL_RE.test(em)) e.email = c.errEmailFormat;
+    if (!praxis.trim()) e.praxis = c.errPraxis;
+    if (!privacy) e.privacy = c.errPrivacy;
     return e;
   }
 
@@ -54,47 +58,32 @@ export function ContactPage() {
     <div className="contact-page">
       <div className="contact-layout">
         <div className="contact-left">
-          <div className="contact-badge">Keine Kreditkarte erforderlich</div>
+          <div className="contact-badge">{c.badge}</div>
           <h1>
-            Ihre persönliche
+            {c.h1a}
             <br />
-            <em>Demo</em> wartet.
+            <em>Demo</em> {c.h1b}
           </h1>
-          <p>
-            30 Minuten, die Ihren Praxisalltag verändern können. Kein Verkaufsgespräch – wir
-            zeigen, wie Yes-Doc konkret Ihre Dokumentation vereinfacht.
-          </p>
+          <p>{c.p}</p>
 
           <div className="what-to-expect">
-            <div className="expect-label">Was Sie erwartet</div>
-            <div className="expect-item">
-              <div className="expect-num">1</div>
-              <div className="expect-content">
-                <h4>Live-Demo Ihrer Praxis</h4>
-                <p>Wir zeigen Yes-Doc anhand Ihrer echten Abläufe – nicht an abstrakten Beispielen.</p>
+            <div className="expect-label">{c.expectLabel}</div>
+            {c.expect.map((item, i) => (
+              <div className="expect-item" key={item.h}>
+                <div className="expect-num">{i + 1}</div>
+                <div className="expect-content">
+                  <h4>{item.h}</h4>
+                  <p>{item.p}</p>
+                </div>
               </div>
-            </div>
-            <div className="expect-item">
-              <div className="expect-num">2</div>
-              <div className="expect-content">
-                <h4>Ihre Fragen, direkt beantwortet</h4>
-                <p>Datenschutz, Migration, Kosten – stellen Sie alle Fragen, die Sie beschäftigen.</p>
-              </div>
-            </div>
-            <div className="expect-item">
-              <div className="expect-num">3</div>
-              <div className="expect-content">
-                <h4>Kein Druck, keine Verpflichtung</h4>
-                <p>Sie entscheiden danach. Kein Follow-up ohne Ihre Erlaubnis.</p>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="contact-guarantee">
-            <div className="guarantee-row">Antwort innerhalb von 24 Stunden</div>
-            <div className="guarantee-row">30 Tage kostenlose Testphase danach möglich</div>
-            <div className="guarantee-row">Kein Vertrag bis Sie 100% überzeugt sind</div>
-            <div className="guarantee-row">Alle Daten bleiben in der Schweiz</div>
+            <div className="guarantee-row">{c.g1}</div>
+            <div className="guarantee-row">{c.g2}</div>
+            <div className="guarantee-row">{c.g3}</div>
+            <div className="guarantee-row">{c.g4}</div>
           </div>
         </div>
 
@@ -108,14 +97,14 @@ export function ContactPage() {
                 noValidate
               >
                 <div className="form-header">
-                  <h2>Demo anfragen</h2>
-                  <p>Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+                  <h2>{c.formTitle}</h2>
+                  <p>{c.formSub}</p>
                 </div>
 
                 <div className="form-row">
                   <div>
                     <label htmlFor="fname">
-                      Vorname <span className="req">*</span>
+                      {c.fname} <span className="req">*</span>
                     </label>
                     <input
                       id="fname"
@@ -132,7 +121,7 @@ export function ContactPage() {
                   </div>
                   <div>
                     <label htmlFor="lname">
-                      Nachname <span className="req">*</span>
+                      {c.lname} <span className="req">*</span>
                     </label>
                     <input
                       id="lname"
@@ -151,7 +140,7 @@ export function ContactPage() {
 
                 <div className="form-group">
                   <label htmlFor="email">
-                    E-Mail-Adresse <span className="req">*</span>
+                    {c.email} <span className="req">*</span>
                   </label>
                   <input
                     id="email"
@@ -169,7 +158,7 @@ export function ContactPage() {
 
                 <div className="form-row">
                   <div>
-                    <label htmlFor="phone">Telefon</label>
+                    <label htmlFor="phone">{c.phone}</label>
                     <input
                       id="phone"
                       type="tel"
@@ -180,7 +169,7 @@ export function ContactPage() {
                   </div>
                   <div>
                     <label htmlFor="praxis">
-                      Praxisname <span className="req">*</span>
+                      {c.praxis} <span className="req">*</span>
                     </label>
                     <input
                       id="praxis"
@@ -198,13 +187,13 @@ export function ContactPage() {
 
                 <div className="form-row">
                   <div>
-                    <label htmlFor="software">Aktuelle Software</label>
+                    <label htmlFor="software">{c.software}</label>
                     <select
                       id="software"
                       value={software}
                       onChange={(e) => setSoftware(e.target.value)}
                     >
-                      <option value="">Bitte wählen…</option>
+                      <option value="">{c.choose}</option>
                       <option>Axon</option>
                       <option>Elexis</option>
                       <option>Medisoft</option>
@@ -213,9 +202,9 @@ export function ContactPage() {
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="size">Grösse der Praxis</label>
+                    <label htmlFor="size">{c.size}</label>
                     <select id="size" value={size} onChange={(e) => setSize(e.target.value)}>
-                      <option value="">Bitte wählen…</option>
+                      <option value="">{c.choose}</option>
                       <option>Einzelpraxis</option>
                       <option>2–3 Ärzte</option>
                       <option>Gruppenpraxis (4+)</option>
@@ -224,12 +213,12 @@ export function ContactPage() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="message">Was beschäftigt Sie am meisten? (optional)</label>
+                  <label htmlFor="message">{c.message}</label>
                   <textarea
                     id="message"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="z.B. Dokumentationsaufwand, Datenmigration, DSGVO-Fragen…"
+                    placeholder={c.msgPlaceholder}
                     rows={4}
                   />
                 </div>
@@ -245,11 +234,14 @@ export function ContactPage() {
                       aria-describedby={errors.privacy ? "err-privacy" : undefined}
                     />
                     <label htmlFor="privacy">
-                      Ich habe die{" "}
-                      <Link to="/datenschutz" className="inline-link">
-                        Datenschutzerklärung
-                      </Link>{" "}
-                      gelesen und stimme der Kontaktaufnahme zu.{" "}
+                      {c.privacy.split(c.datenschutz).map((part, i, arr) => (
+                        <span key={i}>
+                          {part}
+                          {i < arr.length - 1 && (
+                            <Link to="/datenschutz" className="inline-link">{c.datenschutz}</Link>
+                          )}
+                        </span>
+                      ))}{" "}
                       <span className="req">*</span>
                     </label>
                   </div>
@@ -259,19 +251,19 @@ export function ContactPage() {
                 </div>
 
                 <button className="btn-submit" type="submit">
-                  Demo anfragen →
+                  {c.submit}
                 </button>
 
                 <div className="form-footer">
-                  Kein Spam. Keine automatischen Newsletter. Nur die Antwort auf Ihre Anfrage.
+                  {c.formFooter}
                   <br />
-                  <Link to="/datenschutz" className="inline-link">Datenschutzerklärung</Link> ·{" "}
-                  <Link to="/impressum" className="inline-link">Impressum</Link>
+                  <Link to="/datenschutz" className="inline-link">{c.datenschutz}</Link> ·{" "}
+                  <Link to="/impressum" className="inline-link">{c.impressum}</Link>
                 </div>
               </form>
 
               <div className="or-divider">
-                <span>oder direkt kontaktieren</span>
+                <span>{c.orDirect}</span>
               </div>
 
               <div className="direct-contact" id="direct-links">
@@ -282,7 +274,7 @@ export function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <span className="contact-method-label">Telefon</span>
+                    <span className="contact-method-label">{c.phone}</span>
                     <span className="contact-method-value">+41 44 123 45 67</span>
                   </div>
                 </a>
@@ -294,7 +286,7 @@ export function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <span className="contact-method-label">E-Mail</span>
+                    <span className="contact-method-label">{c.mailLabel}</span>
                     <span className="contact-method-value">demo@lyan.ch</span>
                   </div>
                 </a>
@@ -307,18 +299,17 @@ export function ContactPage() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <h3>Anfrage erhalten!</h3>
+              <h3>{c.successH}</h3>
               <p>
-                Vielen Dank, <span id="success-name">{displayName}</span>. Wir melden uns innerhalb
-                von 24 Stunden mit einem Terminvorschlag für Ihre Demo.
+                {c.successP} <span id="success-name">{displayName}</span>{c.successP2}
               </p>
               <Link to="/" className="btn-back">
-                ← Zurück zur Startseite
+                {t.common.back}
               </Link>
 
               <div style={{ marginTop: "2.5rem", paddingTop: "2rem", borderTop: "1px solid var(--border)" }}>
                 <p style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: "1rem" }}>
-                  In der Zwischenzeit:
+                  {c.meanwhile}
                 </p>
                 <div className="direct-contact">
                   <a href="mailto:demo@lyan.ch" className="contact-method">
@@ -329,7 +320,7 @@ export function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <span className="contact-method-label">E-Mail</span>
+                      <span className="contact-method-label">{c.mailLabel}</span>
                       <span className="contact-method-value">demo@lyan.ch</span>
                     </div>
                   </a>
@@ -340,7 +331,7 @@ export function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <span className="contact-method-label">Telefon</span>
+                      <span className="contact-method-label">{c.phone}</span>
                       <span className="contact-method-value">+41 44 123 45 67</span>
                     </div>
                   </a>
