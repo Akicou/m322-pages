@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function ContactPage() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -13,27 +15,39 @@ export function ContactPage() {
   const [privacy, setPrivacy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [displayName, setDisplayName] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     document.title = "Demo anfragen – Yes-Doc";
   }, []);
 
+  function validate() {
+    const e = {};
+    if (!fname.trim()) e.fname = "Bitte geben Sie Ihren Vornamen ein.";
+    if (!lname.trim()) e.lname = "Bitte geben Sie Ihren Nachnamen ein.";
+    const em = email.trim();
+    if (!em) e.email = "Bitte geben Sie Ihre E-Mail-Adresse ein.";
+    else if (!EMAIL_RE.test(em)) e.email = "Bitte geben Sie eine gültige E-Mail-Adresse ein.";
+    if (!praxis.trim()) e.praxis = "Bitte geben Sie den Praxisnamen ein.";
+    if (!privacy) e.privacy = "Bitte stimmen Sie der Datenschutzerklärung zu.";
+    return e;
+  }
+
   function submitForm(e) {
     e?.preventDefault?.();
-    const fn = fname.trim();
-    const em = email.trim();
-    const pr = praxis.trim();
-    if (!fn || !em || !pr) {
-      window.alert("Bitte füllen Sie alle Pflichtfelder aus.");
+    const found = validate();
+    setErrors(found);
+    if (Object.keys(found).length > 0) {
+      const firstField = Object.keys(found)[0];
+      document.getElementById(firstField)?.focus();
       return;
     }
-    if (!privacy) {
-      window.alert("Bitte stimmen Sie der Datenschutzerklärung zu.");
-      return;
-    }
-    const ln = lname.trim();
-    setDisplayName(ln ? `${fn} ${ln}` : fn);
+    setDisplayName(`${fname.trim()} ${lname.trim()}`.trim());
     setSubmitted(true);
+  }
+
+  function clearError(field) {
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   }
 
   return (
@@ -107,10 +121,14 @@ export function ContactPage() {
                       id="fname"
                       type="text"
                       value={fname}
-                      onChange={(e) => setFname(e.target.value)}
+                      onChange={(e) => { setFname(e.target.value); clearError("fname"); }}
                       placeholder="Thomas"
                       autoComplete="given-name"
+                      aria-invalid={!!errors.fname}
+                      aria-describedby={errors.fname ? "err-fname" : undefined}
+                      className={errors.fname ? "input-error" : ""}
                     />
+                    {errors.fname && <p className="field-error" id="err-fname">{errors.fname}</p>}
                   </div>
                   <div>
                     <label htmlFor="lname">
@@ -120,10 +138,14 @@ export function ContactPage() {
                       id="lname"
                       type="text"
                       value={lname}
-                      onChange={(e) => setLname(e.target.value)}
+                      onChange={(e) => { setLname(e.target.value); clearError("lname"); }}
                       placeholder="Weber"
                       autoComplete="family-name"
+                      aria-invalid={!!errors.lname}
+                      aria-describedby={errors.lname ? "err-lname" : undefined}
+                      className={errors.lname ? "input-error" : ""}
                     />
+                    {errors.lname && <p className="field-error" id="err-lname">{errors.lname}</p>}
                   </div>
                 </div>
 
@@ -135,10 +157,14 @@ export function ContactPage() {
                     id="email"
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => { setEmail(e.target.value); clearError("email"); }}
                     placeholder="t.weber@praxis-beispiel.ch"
                     autoComplete="email"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "err-email" : undefined}
+                    className={errors.email ? "input-error" : ""}
                   />
+                  {errors.email && <p className="field-error" id="err-email">{errors.email}</p>}
                 </div>
 
                 <div className="form-row">
@@ -160,9 +186,13 @@ export function ContactPage() {
                       id="praxis"
                       type="text"
                       value={praxis}
-                      onChange={(e) => setPraxis(e.target.value)}
+                      onChange={(e) => { setPraxis(e.target.value); clearError("praxis"); }}
                       placeholder="Hausarztpraxis Weber"
+                      aria-invalid={!!errors.praxis}
+                      aria-describedby={errors.praxis ? "err-praxis" : undefined}
+                      className={errors.praxis ? "input-error" : ""}
                     />
+                    {errors.praxis && <p className="field-error" id="err-praxis">{errors.praxis}</p>}
                   </div>
                 </div>
 
@@ -210,23 +240,33 @@ export function ContactPage() {
                       type="checkbox"
                       id="privacy"
                       checked={privacy}
-                      onChange={(e) => setPrivacy(e.target.checked)}
+                      onChange={(e) => { setPrivacy(e.target.checked); clearError("privacy"); }}
+                      aria-invalid={!!errors.privacy}
+                      aria-describedby={errors.privacy ? "err-privacy" : undefined}
                     />
                     <label htmlFor="privacy">
-                      Ich habe die <a href="#">Datenschutzerklärung</a> gelesen und stimme der
-                      Kontaktaufnahme zu. <span className="req">*</span>
+                      Ich habe die{" "}
+                      <Link to="/datenschutz" className="inline-link">
+                        Datenschutzerklärung
+                      </Link>{" "}
+                      gelesen und stimme der Kontaktaufnahme zu.{" "}
+                      <span className="req">*</span>
                     </label>
                   </div>
+                  {errors.privacy && (
+                    <p className="field-error" id="err-privacy">{errors.privacy}</p>
+                  )}
                 </div>
 
-                <button className="btn-submit" type="submit" disabled={!privacy}>
+                <button className="btn-submit" type="submit">
                   Demo anfragen →
                 </button>
 
                 <div className="form-footer">
                   Kein Spam. Keine automatischen Newsletter. Nur die Antwort auf Ihre Anfrage.
                   <br />
-                  <a href="#">Datenschutzerklärung</a> · <a href="#">Impressum</a>
+                  <Link to="/datenschutz" className="inline-link">Datenschutzerklärung</Link> ·{" "}
+                  <Link to="/impressum" className="inline-link">Impressum</Link>
                 </div>
               </form>
 
@@ -281,18 +321,19 @@ export function ContactPage() {
                   In der Zwischenzeit:
                 </p>
                 <div className="direct-contact">
-                  <a href="#" className="contact-method">
+                  <a href="mailto:demo@lyan.ch" className="contact-method">
                     <div className="contact-method-icon">
                       <svg viewBox="0 0 24 24" fill="none" stroke="#5a7080" strokeWidth="2">
-                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
                       </svg>
                     </div>
                     <div>
-                      <span className="contact-method-label">Live-Chat</span>
-                      <span className="contact-method-value">Jetzt chatten</span>
+                      <span className="contact-method-label">E-Mail</span>
+                      <span className="contact-method-value">demo@lyan.ch</span>
                     </div>
                   </a>
-                  <a href="#" className="contact-method">
+                  <a href="tel:+41441234567" className="contact-method">
                     <div className="contact-method-icon">
                       <svg viewBox="0 0 24 24" fill="none" stroke="#5a7080" strokeWidth="2">
                         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.46-1.46a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
