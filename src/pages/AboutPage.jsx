@@ -1,27 +1,32 @@
 import { useEffect } from "react";
 import { PageHeader } from "../components/PageHeader";
 import { FinalCta } from "../components/FinalCta";
+import { publicUrl } from "../utils/publicUrl";
 
 const team = [
   {
     name: "Dr. med. Matthias Brunner",
     role: "Co-Founder, Medizinische Leitung",
     bio: "15 Jahre Hausarztpraxis in Bern. Versteht den Schmerz der manuellen SOAP-Dokumentation aus erster Hand.",
+    image: publicUrl("images/team-matthias.png"),
   },
   {
     name: "Lina Wyss",
     role: "Co-Founder, Produkt & Datenschutz",
     bio: "Vorher Datenschutzbeauftragte bei einer Schweizer Privatklinik. Spezialisiert auf DSGVO im Gesundheitswesen.",
+    image: publicUrl("images/team-lina.png"),
   },
   {
     name: "Tobias Keller",
     role: "Lead Engineer",
     bio: "Aufgewachsen mit Schweizer Software-Engineering. Baut Yes-Doc nach Prinzipien, die auch in 10 Jahren noch tragen.",
+    image: publicUrl("images/team-tobias.png"),
   },
   {
     name: "Sara Petrov",
     role: "Customer Success",
     bio: "Begleitet Praxen von der Demo bis zur produktiven Nutzung. Kennt jedes gängige Schweizer Bestandssystem.",
+    image: publicUrl("images/team-sara.png"),
   },
 ];
 
@@ -67,6 +72,9 @@ export function AboutPage() {
           <h2 className="section-title">Aus Frust geboren. Aus Praxis gewachsen.</h2>
           <div className="story-grid">
             <div className="story-text">
+              <div style={{ marginBottom: "2rem", borderRadius: "12px", overflow: "hidden" }}>
+                <img src={publicUrl("images/hero-doctor.png")} alt="Doctor" style={{ width: "100%", display: "block" }} />
+              </div>
               <p>
                 2022 sass Matthias an einem Mittwochabend nach einem 12-Stunden-Tag noch zwei
                 Stunden vor dem Computer und tippte SOAP-Notizen in ein veraltetes System. Er
@@ -130,7 +138,7 @@ export function AboutPage() {
           <div className="team-grid">
             {team.map((p) => (
               <div className="team-card" key={p.name}>
-                <div className="team-avatar" aria-hidden="true">
+                <div className="team-avatar" aria-hidden="true" style={{ backgroundImage: `url(${p.image})`, backgroundSize: 'cover', backgroundPosition: 'center', color: 'transparent' }}>
                   {p.name
                     .split(" ")
                     .filter((s) => !s.endsWith("."))

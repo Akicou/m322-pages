@@ -212,9 +212,19 @@ export function HomeTestimonials() {
             <div className="testi-card" key={x.name}>
               <div className="testi-stars">★★★★★</div>
               <p className="testi-quote">„{x.quote}“</p>
-              <div className="testi-author">
-                <strong>{x.name}</strong>
-                {x.role}
+              <div className="testi-author" style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                {x.image && (
+                  <img
+                    src={x.image}
+                    alt={x.name}
+                    style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover" }}
+                  />
+                )}
+                <div>
+                  <strong>{x.name}</strong>
+                  <br />
+                  <span style={{ fontSize: "0.85rem", opacity: 0.8 }}>{x.role}</span>
+                </div>
               </div>
             </div>
           ))}

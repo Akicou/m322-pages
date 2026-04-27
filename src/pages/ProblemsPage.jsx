@@ -4,6 +4,7 @@ import { faqItems } from "../data/faq";
 import { FaqList } from "../components/FaqList";
 import { PageHeader } from "../components/PageHeader";
 import { FinalCta } from "../components/FinalCta";
+import { publicUrl } from "../utils/publicUrl";
 
 const painBlocks = [
   {
@@ -12,6 +13,7 @@ const painBlocks = [
     painTitle: "SOAP-Dokumentation frisst Ihre Zeit",
     painP:
       "Nach einem vollen Praxistag verbringen viele Ärztinnen und Ärzte bis zu 2 Stunden zusätzlich mit der Nacherfassung von Patientennotizen.",
+    painImage: publicUrl("images/problem-stress.png"),
     painItems: [
       "Handschriftliche Notizen müssen digital nacherfasst werden",
       "Keine einheitliche Struktur – jeder Arzt dokumentiert anders",
@@ -34,6 +36,7 @@ const painBlocks = [
     painTitle: "Datenschutz-Unsicherheit blockiert Entscheidungen",
     painP:
       "DSGVO, Schweizer DSG, ärztliche Schweigepflicht – die rechtlichen Anforderungen sind komplex. US-basierte Tools bieten keine Rechtssicherheit.",
+    painImage: publicUrl("images/problem-security.png"),
     painItems: [
       "Unklar, ob Cloud-Lösungen DSGVO-konform sind",
       "Haftungsrisiko bei Datenpannen ist unklar",
@@ -56,6 +59,7 @@ const painBlocks = [
     painTitle: "Angst vor Datenmigration und Umstellung",
     painP:
       "Ein Systemwechsel bedeutet in der Vorstellung vieler Praxen: Wochen Aufwand, Schulungen, möglicher Datenverlust, gestresstes Team.",
+    painImage: publicUrl("images/problem-migration.png"),
     painItems: [
       "Jahrelange Patientendaten könnten verloren gehen",
       "Team muss intensiv neu geschult werden",
@@ -139,6 +143,11 @@ export function ProblemsPage() {
               <div className="pain-side">
                 <div className="side-label pain-label">{b.painLabel}</div>
                 <h3>{b.painTitle}</h3>
+                {b.painImage && (
+                  <div style={{ marginBottom: "1.5rem", borderRadius: "12px", overflow: "hidden" }}>
+                    <img src={b.painImage} alt={b.painTitle} style={{ width: "100%", display: "block" }} />
+                  </div>
+                )}
                 <p>{b.painP}</p>
                 <div className="pain-details">
                   {b.painItems.map((line) => (
