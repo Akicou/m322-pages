@@ -187,7 +187,7 @@ export function HomeDsgvo() {
             ["Datenschutz", "DSGVO + DSG"],
             ["Serverstandort", "🇨🇭 Zürich, CH"],
             ["Verschlüsselung", "AES-256 E2E"],
-            ["Zertifizierung", "ISO 27001"],
+            ["Zertifizierung", "ISO 27001 (in Vorb.)"],
             ["Audit", "Jährlich extern"],
           ].map(([a, b]) => (
             <div className="cert-item" key={a}>
@@ -245,7 +245,10 @@ export function HomeCta() {
       <div className="cta-inner cta-inner--split">
         <div>
           <h2>Bereit für weniger Verwaltung?</h2>
-          <p>30 Tage kostenlos testen. Keine Kreditkarte erforderlich. Kündigung jederzeit.</p>
+          <p>
+            30 Tage kostenlos testen. Keine Kreditkarte erforderlich. Kündigung jederzeit.
+            Ab <strong>CHF 99 / Monat</strong> pro Arzt.
+          </p>
         </div>
         <div className="cta-btns">
           <Link to="/contact" className="btn-primary">

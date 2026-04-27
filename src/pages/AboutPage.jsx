@@ -138,13 +138,12 @@ export function AboutPage() {
           <div className="team-grid">
             {team.map((p) => (
               <div className="team-card" key={p.name}>
-                <div className="team-avatar" aria-hidden="true" style={{ backgroundImage: `url(${p.image})`, backgroundSize: 'cover', backgroundPosition: 'center', color: 'transparent' }}>
-                  {p.name
-                    .split(" ")
-                    .filter((s) => !s.endsWith("."))
-                    .slice(-2)
-                    .map((s) => s[0])
-                    .join("")}
+                <div className="team-avatar">
+                  <img
+                    src={p.image}
+                    alt={`Porträt von ${p.name}, ${p.role}`}
+                    loading="lazy"
+                  />
                 </div>
                 <h3>{p.name}</h3>
                 <div className="team-role">{p.role}</div>

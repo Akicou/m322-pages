@@ -1,20 +1,60 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
-const links = [
-  { to: "/funktionen", label: "Funktionen" },
-  { to: "/problems", label: "Probleme & Lösungen" },
-  { to: "/datenschutz", label: "Datenschutz" },
-  { to: "/ueber-uns", label: "Über uns" },
-];
+const i18n = {
+  de: {
+    funktionen: "Funktionen",
+    probleme: "Probleme & Lösungen",
+    datenschutz: "Datenschutz",
+    ueber: "Über uns",
+    cta: "Demo anfragen",
+    menu: "Menü",
+    ctaArrow: "Demo anfragen →",
+    footer1: "DSGVO & DSG konform",
+    footer2: "Serverstandort 100% Schweiz",
+  },
+  fr: {
+    fonctionnalités: "Fonctions",
+    problèmes: "Problèmes & Solutions",
+    confidentialité: "Confidentialité",
+    à_propos: "À propos",
+    cta: "Démo",
+    menu: "Menu",
+    ctaArrow: "Demander une démo →",
+    footer1: "Conforme RGPD & LPD",
+    footer2: "Serveurs 100% en Suisse",
+  },
+};
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const [lang, setLang] = useState(() => localStorage.getItem("lang") || "de");
   const { pathname } = useLocation();
+
+  const t = lang === "fr" ? i18n.fr : i18n.de;
+
+  const links = lang === "fr"
+    ? [
+        { to: "/funktionen", label: t.fonctionnalités },
+        { to: "/problems", label: t.problèmes },
+        { to: "/datenschutz", label: t.confidentialité },
+        { to: "/ueber-uns", label: t.à_propos },
+      ]
+    : [
+        { to: "/funktionen", label: t.funktionen },
+        { to: "/problems", label: t.probleme },
+        { to: "/datenschutz", label: t.datenschutz },
+        { to: "/ueber-uns", label: t.ueber },
+      ];
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    localStorage.setItem("lang", lang);
+  }, [lang]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -46,8 +86,27 @@ export function Nav() {
               isActive ? "btn-nav btn-nav--here" : "btn-nav"
             }
           >
-            Demo anfragen
+            {t.cta}
           </NavLink>
+          <div className="lang-toggle" role="group" aria-label="Sprache wählen">
+            <button
+              type="button"
+              className={lang === "de" ? "lang-btn lang-btn--active" : "lang-btn"}
+              onClick={() => setLang("de")}
+              aria-pressed={lang === "de"}
+            >
+              DE
+            </button>
+            <span className="lang-sep">/</span>
+            <button
+              type="button"
+              className={lang === "fr" ? "lang-btn lang-btn--active" : "lang-btn"}
+              onClick={() => setLang("fr")}
+              aria-pressed={lang === "fr"}
+            >
+              FR
+            </button>
+          </div>
         </div>
 
         <button
@@ -69,7 +128,7 @@ export function Nav() {
         className={`mobile-menu${open ? " mobile-menu--open" : ""}`}
         aria-hidden={!open}
       >
-        <div className="mobile-menu__label">Menü</div>
+        <div className="mobile-menu__label">{t.menu}</div>
         <div className="mobile-menu__list">
           {links.map((l) => (
             <NavLink
@@ -88,12 +147,12 @@ export function Nav() {
           className="btn-primary mobile-menu__cta"
           onClick={() => setOpen(false)}
         >
-          Demo anfragen →
+          {t.ctaArrow}
         </NavLink>
 
         <div className="mobile-menu__footer">
-          <span>DSGVO &amp; DSG konform</span>
-          <span>Serverstandort 100% Schweiz</span>
+          <span>{t.footer1}</span>
+          <span>{t.footer2}</span>
         </div>
       </div>
     </nav>
