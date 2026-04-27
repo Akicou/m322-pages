@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Demo anfragen – Lyan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0f2340;
+    --navy-mid: #1a3a5c;
+    --slate: #f0f3f7;
+    --accent: #1d6fa4;
+    --accent-light: #e8f3fb;
+    --text: #0f2340;
+    --muted: #5a7080;
+    --border: #d4dde6;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--text); }
+  h1,h2,h3,h4 { font-family: 'DM Serif Display', serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); letter-spacing: -0.02em; text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { font-size: 0.875rem; color: var(--muted); text-decoration: none; font-weight: 400; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--navy); }
+  .btn-nav { background: var(--navy); color: white !important; padding: 0.5rem 1.25rem; border-radius: 4px; font-weight: 500 !important; }
+
+  /* LAYOUT */
+  .contact-layout { padding-top: 64px; min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+  .contact-left { background: var(--navy); padding: 5rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+  .contact-right { padding: 5rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+
+  /* LEFT */
+  .contact-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(29,111,164,0.25); border: 1px solid rgba(29,111,164,0.4); color: #a8d4ee; font-size: 0.78rem; padding: 0.35rem 0.85rem; border-radius: 100px; margin-bottom: 2rem; }
+  .contact-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #4a9fd4; animation: pulse 2s infinite; flex-shrink: 0; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  .contact-left h1 { font-size: clamp(2rem, 3vw, 2.75rem); color: white; line-height: 1.2; margin-bottom: 1.25rem; }
+  .contact-left h1 em { font-style: italic; color: #4a9fd4; }
+  .contact-left p { font-size: 0.95rem; color: rgba(255,255,255,0.6); line-height: 1.8; font-weight: 300; margin-bottom: 2.5rem; max-width: 380px; }
+
+  .what-to-expect { }
+  .expect-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.3); margin-bottom: 1rem; }
+  .expect-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .expect-item:last-child { border-bottom: none; }
+  .expect-num { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: rgba(255,255,255,0.15); line-height: 1; flex-shrink: 0; width: 2rem; }
+  .expect-content h4 { font-size: 0.9rem; color: white; margin-bottom: 0.2rem; }
+  .expect-content p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; font-weight: 300; }
+
+  .contact-guarantee { margin-top: 2.5rem; padding: 1.25rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; }
+  .guarantee-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; font-size: 0.82rem; color: rgba(255,255,255,0.55); }
+  .guarantee-row:last-child { margin-bottom: 0; }
+  .guarantee-row::before { content: '✓'; color: #4a9fd4; font-weight: 500; flex-shrink: 0; }
+
+  /* RIGHT – FORM */
+  .form-header { margin-bottom: 2.5rem; }
+  .form-header h2 { font-size: 1.75rem; color: var(--navy); margin-bottom: 0.5rem; }
+  .form-header p { font-size: 0.9rem; color: var(--muted); font-weight: 300; }
+
+  .form-group { margin-bottom: 1.25rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+  label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--navy); margin-bottom: 0.4rem; }
+  label .req { color: var(--accent); margin-left: 2px; }
+  input[type=text], input[type=email], input[type=tel], select, textarea {
+    width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border);
+    border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    color: var(--text); background: white; transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none; outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,111,164,0.1);
+  }
+  input::placeholder, textarea::placeholder { color: #aab4bf; }
+  textarea { resize: vertical; min-height: 100px; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a7080' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer; }
+
+  .checkbox-group { display: flex; gap: 0.75rem; align-items: flex-start; }
+  .checkbox-group input[type=checkbox] { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; accent-color: var(--accent); cursor: pointer; }
+  .checkbox-group label { font-size: 0.82rem; color: var(--muted); font-weight: 300; cursor: pointer; margin-bottom: 0; }
+  .checkbox-group label a { color: var(--accent); text-decoration: none; }
+
+  .btn-submit { width: 100%; padding: 1rem; background: var(--navy); color: white; border: none; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 0.5rem; }
+  .btn-submit:hover { background: var(--accent); transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+
+  .form-footer { margin-top: 1rem; text-align: center; font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+  .form-footer a { color: var(--accent); text-decoration: none; }
+
+  /* SUCCESS STATE */
+  .success-state { display: none; text-align: center; padding: 3rem 1rem; }
+  .success-icon { width: 72px; height: 72px; background: #e8f8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+  .success-state h3 { font-size: 1.5rem; color: var(--navy); margin-bottom: 0.75rem; }
+  .success-state p { font-size: 0.9rem; color: var(--muted); font-weight: 300; max-width: 320px; margin: 0 auto 2rem; line-height: 1.75; }
+  .btn-back { display: inline-block; color: var(--accent); font-size: 0.9rem; text-decoration: none; border-bottom: 1px solid #b3d9f0; padding-bottom: 1px; transition: border-color 0.2s; }
+  .btn-back:hover { border-color: var(--accent); }
+
+  /* DIVIDER */
+  .or-divider { text-align: center; margin: 1.5rem 0; position: relative; }
+  .or-divider::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--border); }
+  .or-divider span { position: relative; background: white; padding: 0 0.75rem; font-size: 0.78rem; color: var(--muted); }
+
+  .direct-contact { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .contact-method { flex: 1; min-width: 140px; border: 1px solid var(--border); border-radius: 6px; padding: 1rem; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; transition: border-color 0.15s, background 0.15s; }
+  .contact-method:hover { border-color: var(--accent); background: var(--accent-light); }
+  .contact-method-icon { width: 36px; height: 36px; background: var(--slate); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .contact-method-icon svg { width: 16px; height: 16px; }
+  .contact-method-label { font-size: 0.72rem; color: var(--muted); display: block; }
+  .contact-method-value { font-size: 0.88rem; color: var(--navy); font-weight: 500; display: block; }
+
+  footer { background: var(--navy); }
+  .footer-bottom { padding: 1.25rem 2rem; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 0.78rem; color: rgba(255,255,255,0.3); flex-wrap: wrap; gap: 0.5rem; }
+
+  @media(max-width:900px) {
+    .contact-layout { grid-template-columns: 1fr; }
+    .contact-left { padding: 4rem 2rem 3rem; }
+    .contact-right { padding: 3rem 2rem 4rem; }
+    .nav-links { display: none; }
+  }
+  @media(max-width:480px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  @keyframes fadeIn { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+  .contact-right { animation: fadeIn 0.5s ease 0.1s both; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Ly<span>an</span></a>
+    <div class="nav-links">
+      <a href="problems.html">Probleme & Lösungen</a>
+      <a href="#">Funktionen</a>
+      <a href="#">Datenschutz</a>
+      <a href="#">Über uns</a>
+      <a href="contact.html" class="btn-nav" style="background:var(--accent);">Demo anfragen</a>
+    </div>
+  </div>
+</nav>
+
+<div class="contact-layout">
+  <!-- LEFT PANEL -->
+  <div class="contact-left">
+    <div class="contact-badge">Keine Kreditkarte erforderlich</div>
+    <h1>Ihre persönliche<br/><em>Demo</em> wartet.</h1>
+    <p>30 Minuten, die Ihren Praxisalltag verändern können. Kein Verkaufsgespräch – wir zeigen, wie Lyan konkret Ihre Dokumentation vereinfacht.</p>
+
+    <div class="what-to-expect">
+      <div class="expect-label">Was Sie erwartet</div>
+      <div class="expect-item">
+        <div class="expect-num">1</div>
+        <div class="expect-content">
+          <h4>Live-Demo Ihrer Praxis</h4>
+          <p>Wir zeigen Lyan anhand Ihrer echten Abläufe – nicht an abstrakten Beispielen.</p>
+        </div>
+      </div>
+      <div class="expect-item">
+        <div class="expect-num">2</div>
+        <div class="expect-content">
+          <h4>Ihre Fragen, direkt beantwortet</h4>
+          <p>Datenschutz, Migration, Kosten – stellen Sie alle Fragen, die Sie beschäftigen.</p>
+        </div>
+      </div>
+      <div class="expect-item">
+        <div class="expect-num">3</div>
+        <div class="expect-content">
+          <h4>Kein Druck, keine Verpflichtung</h4>
+          <p>Sie entscheiden danach. Kein Follow-up ohne Ihre Erlaubnis.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-guarantee">
+      <div class="guarantee-row">Antwort innerhalb von 24 Stunden</div>
+      <div class="guarantee-row">30 Tage kostenlose Testphase danach möglich</div>
+      <div class="guarantee-row">Kein Vertrag bis Sie 100% überzeugt sind</div>
+      <div class="guarantee-row">Alle Daten bleiben in der Schweiz</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL – FORM -->
+  <div class="contact-right">
+
+    <!-- FORM -->
+    <div id="form-container">
+      <div class="form-header">
+        <h2>Demo anfragen</h2>
+        <p>Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Vorname <span class="req">*</span></label>
+          <input type="text" id="fname" placeholder="Thomas"/>
+        </div>
+        <div>
+          <label>Nachname <span class="req">*</span></label>
+          <input type="text" id="lname" placeholder="Weber"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>E-Mail-Adresse <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="t.weber@praxis-beispiel.ch"/>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Telefon</label>
+          <input type="tel" id="phone" placeholder="+41 44 000 00 00"/>
+        </div>
+        <div>
+          <label>Praxisname <span class="req">*</span></label>
+          <input type="text" id="praxis" placeholder="Hausarztpraxis Weber"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Aktuelle Software</label>
+          <select id="software">
+            <option value="">Bitte wählen…</option>
+            <option>Axon</option>
+            <option>Elexis</option>
+            <option>Medisoft</option>
+            <option>Andere</option>
+            <option>Keine / Papier</option>
+          </select>
+        </div>
+        <div>
+          <label>Grösse der Praxis</label>
+          <select id="size">
+            <option value="">Bitte wählen…</option>
+            <option>Einzelpraxis</option>
+            <option>2–3 Ärzte</option>
+            <option>Gruppenpraxis (4+)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Was beschäftigt Sie am meisten? (optional)</label>
+        <textarea id="message" placeholder="z.B. Dokumentationsaufwand, Datenmigration, DSGVO-Fragen…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-group">
+          <input type="checkbox" id="privacy"/>
+          <label for="privacy">Ich habe die <a href="#">Datenschutzerklärung</a> gelesen und stimme der Kontaktaufnahme zu. <span class="req">*</span></label>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="submitForm()">Demo anfragen →</button>
+
+      <div class="form-footer">
+        Kein Spam. Keine automatischen Newsletter. Nur die Antwort auf Ihre Anfrage.<br/>
+        <a href="#">Datenschutzerklärung</a> · <a href="#">Impressum</a>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-state" id="success-state">
+      <div class="success-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1d7a4a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Anfrage erhalten!</h3>
+      <p>Vielen Dank, <span id="success-name">Dr. Weber</span>. Wir melden uns innerhalb von 24 Stunden mit einem Terminvorschlag für Ihre Demo.</p>
+      <a href="index.html" class="btn-back">← Zurück zur Startseite</a>
+
+      <div style="margin-top:2.5rem; padding-top:2rem; border-top:1px solid var(--border);">
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">In der Zwischenzeit:</p>
+        <div class="direct-contact">
+          <a href="#" class="contact-method">
+            <div class="contact-method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5a7080" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <div><span class="contact-method-label">Live-Chat</span><span class="contact-method-value">Jetzt chatten</span></div>
+          </a>
+          <a href="#" class="contact-method">
+            <div class="contact-method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5a7080" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.46-1.46a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+            <div><span class="contact-method-label">Telefon</span><span class="contact-method-value">+41 44 123 45 67</span></div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="or-divider"><span>oder direkt kontaktieren</span></div>
+
+    <div class="direct-contact" id="direct-links">
+      <a href="tel:+41441234567" class="contact-method">
+        <div class="contact-method-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5a7080" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.46-1.46a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div>
+          <span class="contact-method-label">Telefon</span>
+          <span class="contact-method-value">+41 44 123 45 67</span>
+        </div>
+      </a>
+      <a href="mailto:demo@lyan.ch" class="contact-method">
+        <div class="contact-method-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5a7080" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <span class="contact-method-label">E-Mail</span>
+          <span class="contact-method-value">demo@lyan.ch</span>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <span>© 2025 Lyan GmbH · Zürich, Schweiz</span>
+      <span>Datenschutz · Impressum · AGB</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function submitForm() {
+  const fname = document.getElementById('fname').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const praxis = document.getElementById('praxis').value.trim();
+  const privacy = document.getElementById('privacy').checked;
+
+  if (!fname || !email || !praxis) {
+    alert('Bitte füllen Sie alle Pflichtfelder aus.');
+    return;
+  }
+  if (!privacy) {
+    alert('Bitte stimmen Sie der Datenschutzerklärung zu.');
+    return;
+  }
+
+  const lname = document.getElementById('lname').value.trim();
+  document.getElementById('success-name').textContent = (fname + (lname ? ' ' + lname : ''));
+
+  document.getElementById('form-container').style.display = 'none';
+  document.getElementById('direct-links').style.display = 'none';
+  document.querySelector('.or-divider').style.display = 'none';
+
+  const s = document.getElementById('success-state');
+  s.style.display = 'block';
+  s.style.animation = 'fadeIn 0.4s ease both';
+}
+
+document.getElementById('privacy').addEventListener('change', function() {
+  document.querySelector('.btn-submit').style.background = this.checked ? 'var(--navy)' : '#ccc';
+});
+</script>
+
+</body>
+</html>

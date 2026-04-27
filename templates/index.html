@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lyan – Smarte Praxisdokumentation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0f2340;
+    --navy-mid: #1a3a5c;
+    --slate: #f0f3f7;
+    --accent: #1d6fa4;
+    --accent-light: #e8f3fb;
+    --text: #0f2340;
+    --muted: #5a7080;
+    --border: #d4dde6;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--text); }
+  h1,h2,h3 { font-family: 'DM Serif Display', serif; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { font-size: 0.875rem; color: var(--muted); text-decoration: none; font-weight: 400; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--navy); }
+  .btn-nav { background: var(--navy); color: white !important; padding: 0.5rem 1.25rem; border-radius: 4px; font-weight: 500 !important; transition: background 0.2s !important; }
+  .btn-nav:hover { background: var(--accent) !important; }
+
+  /* HERO */
+  .hero { padding: 140px 2rem 100px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent-light); color: var(--accent); font-size: 0.8rem; font-weight: 500; padding: 0.35rem 0.85rem; border-radius: 100px; border: 1px solid #b3d9f0; margin-bottom: 1.5rem; }
+  .hero-badge::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .hero h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1.15; color: var(--navy); margin-bottom: 1.25rem; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero p { font-size: 1.05rem; color: var(--muted); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; max-width: 460px; }
+  .hero-ctas { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary { background: var(--navy); color: white; padding: 0.85rem 2rem; border-radius: 4px; font-size: 0.95rem; font-weight: 500; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block; }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+  .btn-secondary { color: var(--navy); padding: 0.85rem 1.5rem; font-size: 0.95rem; font-weight: 400; text-decoration: none; border-bottom: 1px solid var(--border); transition: border-color 0.2s; display: inline-block; }
+  .btn-secondary:hover { border-color: var(--navy); }
+  .hero-trust { margin-top: 2.5rem; display: flex; align-items: center; gap: 1rem; }
+  .trust-pill { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+  .trust-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* Hero visual */
+  .hero-visual { position: relative; }
+  .screen-mockup { background: var(--navy); border-radius: 12px; padding: 1.5rem; box-shadow: 0 32px 64px rgba(15,35,64,0.18), 0 8px 16px rgba(15,35,64,0.12); }
+  .screen-bar { display: flex; gap: 6px; margin-bottom: 1rem; }
+  .screen-bar span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .screen-content { background: #0a1a2e; border-radius: 8px; padding: 1.25rem; }
+  .soap-label { font-size: 0.65rem; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; font-family: monospace; }
+  .soap-row { background: rgba(255,255,255,0.04); border-radius: 4px; padding: 0.6rem 0.75rem; margin-bottom: 0.5rem; }
+  .soap-row-label { font-size: 0.65rem; color: #4a9fd4; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.3rem; font-family: monospace; }
+  .soap-row-text { font-size: 0.8rem; color: rgba(255,255,255,0.75); line-height: 1.5; font-family: monospace; }
+  .soap-cursor { display: inline-block; width: 2px; height: 12px; background: #4a9fd4; animation: blink 1s infinite; vertical-align: middle; margin-left: 2px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .ai-badge { margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; background: rgba(29,111,164,0.25); border-radius: 6px; border: 1px solid rgba(29,111,164,0.3); }
+  .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #4a9fd4; animation: pulse 2s infinite; flex-shrink: 0; }
+  @keyframes pulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:0.6; transform:scale(0.85)} }
+  .ai-badge-text { font-size: 0.72rem; color: #4a9fd4; font-family: monospace; }
+
+  /* STRIP */
+  .strip { background: var(--navy); padding: 1.25rem 2rem; }
+  .strip-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .strip-item { display: flex; align-items: center; gap: 0.75rem; color: rgba(255,255,255,0.7); font-size: 0.82rem; }
+  .strip-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.8; }
+
+  /* PROBLEMS */
+  .section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); font-weight: 500; margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--navy); margin-bottom: 1rem; line-height: 1.25; }
+  .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.75; font-weight: 300; }
+
+  .problems-grid { margin-top: 3rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: var(--border); border: 1px solid var(--border); }
+  .problem-card { background: white; padding: 2rem; }
+  .problem-num { font-family: 'DM Serif Display', serif; font-size: 3rem; color: var(--border); line-height: 1; margin-bottom: 1rem; }
+  .problem-card h3 { font-size: 1.05rem; color: var(--navy); margin-bottom: 0.6rem; }
+  .problem-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.7; font-weight: 300; }
+  .problem-arrow { margin-top: 1.25rem; font-size: 0.8rem; color: var(--accent); font-weight: 500; }
+
+  /* FEATURES */
+  .features-bg { background: var(--slate); }
+  .features-grid { margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .feature-item { display: flex; gap: 1.25rem; align-items: flex-start; }
+  .feature-icon { width: 44px; height: 44px; background: var(--accent-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #b3d9f0; }
+  .feature-icon svg { width: 20px; height: 20px; }
+  .feature-item h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 0.35rem; }
+  .feature-item p { font-size: 0.875rem; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+  /* DSGVO */
+  .dsgvo-section { background: var(--navy); color: white; }
+  .dsgvo-inner { max-width: 1100px; margin: 0 auto; padding: 5rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .dsgvo-badge { display: inline-flex; align-items: center; gap: 0.6rem; background: rgba(29,111,164,0.3); border: 1px solid rgba(29,111,164,0.5); padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.82rem; color: #a8d4ee; margin-bottom: 1.5rem; }
+  .dsgvo-inner h2 { font-size: clamp(1.8rem, 2.5vw, 2.4rem); color: white; margin-bottom: 1rem; }
+  .dsgvo-inner p { font-size: 0.95rem; color: rgba(255,255,255,0.65); line-height: 1.8; font-weight: 300; }
+  .dsgvo-checklist { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .dsgvo-check { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; color: rgba(255,255,255,0.8); }
+  .check-icon { width: 20px; height: 20px; background: rgba(29,111,164,0.3); border: 1px solid rgba(29,111,164,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .dsgvo-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 2rem; }
+  .cert-item { padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
+  .cert-item:last-child { border: none; }
+  .cert-label { font-size: 0.875rem; color: rgba(255,255,255,0.6); }
+  .cert-value { font-size: 0.875rem; color: #a8d4ee; font-weight: 500; }
+
+  /* TESTIMONIALS */
+  .testimonials-grid { margin-top: 3rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .testi-card { border: 1px solid var(--border); border-radius: 8px; padding: 1.75rem; }
+  .testi-stars { color: var(--accent); font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 2px; }
+  .testi-quote { font-size: 0.9rem; color: var(--text); line-height: 1.75; font-weight: 300; margin-bottom: 1.25rem; font-style: italic; }
+  .testi-author { font-size: 0.8rem; color: var(--muted); }
+  .testi-author strong { color: var(--navy); font-weight: 500; display: block; }
+
+  /* CTA */
+  .cta-section { background: var(--accent-light); border-top: 1px solid #b3d9f0; border-bottom: 1px solid #b3d9f0; }
+  .cta-inner { max-width: 1100px; margin: 0 auto; padding: 5rem 2rem; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 3rem; }
+  .cta-inner h2 { font-size: clamp(1.6rem, 2.5vw, 2.2rem); color: var(--navy); }
+  .cta-inner p { font-size: 0.95rem; color: var(--muted); margin-top: 0.6rem; font-weight: 300; }
+  .cta-btns { display: flex; gap: 1rem; flex-direction: column; align-items: flex-end; }
+
+  /* FOOTER */
+  footer { background: var(--navy); color: rgba(255,255,255,0.5); }
+  .footer-inner { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2rem; }
+  .footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: white; margin-bottom: 0.75rem; }
+  .footer-logo span { color: #4a9fd4; }
+  .footer-desc { font-size: 0.82rem; line-height: 1.7; max-width: 200px; }
+  .footer-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 1rem; }
+  .footer-col a { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.55); text-decoration: none; margin-bottom: 0.6rem; transition: color 0.2s; }
+  .footer-col a:hover { color: white; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding: 1.25rem 2rem; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+
+  @media(max-width:768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .problems-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .dsgvo-inner { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .cta-inner { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+
+  @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+  .hero-content > * { animation: fadeUp 0.6s ease both; }
+  .hero-content > *:nth-child(1) { animation-delay: 0.05s; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.15s; }
+  .hero-content > *:nth-child(3) { animation-delay: 0.25s; }
+  .hero-content > *:nth-child(4) { animation-delay: 0.35s; }
+  .hero-content > *:nth-child(5) { animation-delay: 0.45s; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">Ly<span>an</span></div>
+    <div class="nav-links">
+      <a href="problems.html">Probleme & Lösungen</a>
+      <a href="#">Funktionen</a>
+      <a href="#">Datenschutz</a>
+      <a href="#">Über uns</a>
+      <a href="contact.html" class="btn-nav">Demo anfragen</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">DSGVO-konform · Schweizer Datenschutz</div>
+      <h1>Weniger Verwaltung.<br/><em>Mehr Zeit</em><br/>für Ihre Patienten.</h1>
+      <p>Die smarte Praxissoftware, die SOAP-Dokumentation in Minuten erledigt – sicher, effizient und rechtssicher nach Schweizer Standard.</p>
+      <div class="hero-ctas">
+        <a href="contact.html" class="btn-primary">Kostenlose Demo buchen</a>
+        <a href="problems.html" class="btn-secondary">Wie es funktioniert →</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Keine Datenweitergabe
+        </div>
+        <div class="trust-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          30-Tage-Testphase
+        </div>
+        <div class="trust-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Setup in 1 Tag
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="screen-mockup">
+        <div class="screen-bar"><span></span><span></span><span></span></div>
+        <div class="screen-content">
+          <div class="soap-label">// SOAP Dokumentation · Patient #1847</div>
+          <div class="soap-row">
+            <div class="soap-row-label">S — Subjektiv</div>
+            <div class="soap-row-text">Kopfschmerzen seit 3 Tagen, Schlafmangel, leichter Schwindel.</div>
+          </div>
+          <div class="soap-row">
+            <div class="soap-row-label">O — Objektiv</div>
+            <div class="soap-row-text">RR 130/80, Puls 72/min, Temp. 37.1°C</div>
+          </div>
+          <div class="soap-row">
+            <div class="soap-row-label">A — Assessment</div>
+            <div class="soap-row-text">Spannungskopfschmerz, V.a. Schlafentzug<span class="soap-cursor"></span></div>
+          </div>
+          <div class="soap-row" style="opacity:0.5;">
+            <div class="soap-row-label">P — Plan</div>
+            <div class="soap-row-text" style="color:rgba(255,255,255,0.3);">KI generiert Vorschlag...</div>
+          </div>
+          <div class="ai-badge">
+            <div class="ai-badge-dot"></div>
+            <div class="ai-badge-text">KI-Assistent analysiert → Vorschlag in 2s</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-inner">
+    <div class="strip-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      DSGVO & DSG konform
+    </div>
+    <div class="strip-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Läuft auf iPad, Desktop & Mobile
+    </div>
+    <div class="strip-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Über 200 Arztpraxen vertrauen uns
+    </div>
+    <div class="strip-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Offline-Modus verfügbar
+    </div>
+    <div class="strip-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Ø 18 Min. täglich gespart
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Warum Lyan?</div>
+    <h2 class="section-title">Die drei grössten<br/>Schmerzpunkte im Praxisalltag</h2>
+    <p class="section-sub">Dr. Thomas Weber ist nicht allein. Diese Probleme kennen 9 von 10 Praxisinhabern – wir haben sie behoben.</p>
+    <div class="problems-grid">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <h3>Zeitfressende Dokumentation</h3>
+        <p>Stundenlange SOAP-Notizen nach Feierabend. Handschriftliche Zettel, die digital nacherfasst werden müssen. Das kostet Sie täglich wertvolle Zeit.</p>
+        <div class="problem-arrow">→ Lyan halbiert Ihren Dokumentationsaufwand</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <h3>Datenschutz-Unsicherheit</h3>
+        <p>DSGVO, DSG, ärztliche Schweigepflicht – wer haftet eigentlich? Viele Tools sind US-basiert und bieten keine klare Rechtssicherheit für Schweizer Praxen.</p>
+        <div class="problem-arrow">→ Serverstandort Schweiz, DSGVO-zertifiziert</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <h3>Angst vor der Datenmigration</h3>
+        <p>Ein Systemwechsel klingt nach Wochen Aufwand, Datenverlust und Schulung des ganzen Teams. Die meisten Praxen bleiben deshalb bei veralteten Systemen.</p>
+        <div class="problem-arrow">→ Migration in 1 Tag, wir übernehmen alles</div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:2.5rem;">
+      <a href="problems.html" class="btn-primary">Alle Lösungen entdecken</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section features-bg">
+  <div class="section-inner">
+    <div class="section-label">Funktionen</div>
+    <h2 class="section-title">Alles was Ihre Praxis braucht.<br/>Nichts was sie nicht braucht.</h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div>
+          <h3>KI-gestützte SOAP-Notizen</h3>
+          <p>Sprechen Sie, Lyan schreibt. Die KI strukturiert Ihre Notizen automatisch in das SOAP-Format und schlägt Diagnosen vor.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <h3>DSGVO-konforme Datenspeicherung</h3>
+          <p>Alle Patientendaten verbleiben auf Servern in der Schweiz. Ende-zu-Ende-Verschlüsselung, vollständig auditierbar.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.46-1.46a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        </div>
+        <div>
+          <h3>Terminbuchung & Rückruf</h3>
+          <p>Patienten buchen Termine direkt online. Automatische Erinnerungen reduzieren No-Shows um bis zu 40%.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div>
+          <h3>Alle Geräte, auch offline</h3>
+          <p>iPad im Behandlungszimmer, Desktop am Empfang, Smartphone unterwegs. Funktioniert auch ohne Internet.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div>
+          <h3>Datenmigration in 1 Tag</h3>
+          <p>Unser Team übernimmt die komplette Migration Ihrer Bestandsdaten. Kein Datenverlust, kein Stress für Ihr Team.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div>
+          <h3>Praxisanalysen & Berichte</h3>
+          <p>Einnahmen, Patientenfrequenz, häufige Diagnosen – übersichtlich aufbereitet für bessere Entscheidungen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DSGVO -->
+<div class="dsgvo-section">
+  <div class="dsgvo-inner">
+    <div>
+      <div class="dsgvo-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Datenschutz als Fundament
+      </div>
+      <h2>Ihre Patientendaten.<br/>Sicher wie in einem Tresor.</h2>
+      <p>Wir haben Lyan von Grund auf mit Datenschutz als Kernprinzip entwickelt – nicht als nachträgliche Checkbox. Serverstandort Schweiz, ärztliche Schweigepflicht eingebettet.</p>
+      <div class="dsgvo-checklist">
+        <div class="dsgvo-check">
+          <div class="check-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4a9fd4" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          DSGVO & Schweizer DSG vollständig erfüllt
+        </div>
+        <div class="dsgvo-check">
+          <div class="check-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4a9fd4" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Serverstandort ausschliesslich Schweiz
+        </div>
+        <div class="dsgvo-check">
+          <div class="check-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4a9fd4" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Ende-zu-Ende-Verschlüsselung
+        </div>
+        <div class="dsgvo-check">
+          <div class="check-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4a9fd4" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Keine Datenweitergabe an Dritte
+        </div>
+        <div class="dsgvo-check">
+          <div class="check-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4a9fd4" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Vollständiges Auditprotokoll
+        </div>
+      </div>
+    </div>
+    <div class="dsgvo-card">
+      <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.75rem;">Sicherheitszertifikate</div>
+      <div class="cert-item">
+        <span class="cert-label">Datenschutz</span>
+        <span class="cert-value">DSGVO + DSG</span>
+      </div>
+      <div class="cert-item">
+        <span class="cert-label">Serverstandort</span>
+        <span class="cert-value">🇨🇭 Zürich, CH</span>
+      </div>
+      <div class="cert-item">
+        <span class="cert-label">Verschlüsselung</span>
+        <span class="cert-value">AES-256 E2E</span>
+      </div>
+      <div class="cert-item">
+        <span class="cert-label">Zertifizierung</span>
+        <span class="cert-value">ISO 27001</span>
+      </div>
+      <div class="cert-item">
+        <span class="cert-label">Audit</span>
+        <span class="cert-value">Jährlich extern</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Referenzen</div>
+    <h2 class="section-title">Was Praxisinhabende sagen</h2>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Ich spare täglich fast 30 Minuten bei der Dokumentation. Die SOAP-Vorschläge sind erstaunlich präzise. Und das Datenschutz-Konzept hat uns sofort überzeugt."</p>
+        <div class="testi-author"><strong>Dr. med. Sandra Huber</strong> Hausarztpraxis Bern</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Migration war in einem Tag erledigt. Unser Team war nach zwei Stunden eingearbeitet. Hätte nie gedacht, dass ein Systemwechsel so reibungslos geht."</p>
+        <div class="testi-author"><strong>Dr. med. Markus Frei</strong> Gruppenpraxis Zürich</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Als Praxismanagerin war ich skeptisch. Heute läuft alles deutlich effizienter. Der Support ist schnell, kompetent und versteht medizinische Abläufe wirklich."</p>
+        <div class="testi-author"><strong>Claudia Messmer</strong> Praxismanagerin, Basel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div>
+      <h2>Bereit für weniger Verwaltung?</h2>
+      <p>30 Tage kostenlos testen. Keine Kreditkarte erforderlich. Kündigung jederzeit.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="contact.html" class="btn-primary">Demo buchen →</a>
+      <span style="font-size:0.78rem;color:var(--muted);text-align:right;">Antwort innerhalb<br/>von 24 Stunden</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Ly<span>an</span></div>
+      <p class="footer-desc">Smarte Praxissoftware für Schweizer Arztpraxen. Effizient, sicher, praxistauglich.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produkt</h4>
+      <a href="#">Funktionen</a>
+      <a href="#">Preise</a>
+      <a href="#">Demo</a>
+      <a href="#">Changelog</a>
+    </div>
+    <div class="footer-col">
+      <h4>Vertrauen</h4>
+      <a href="#">Datenschutz</a>
+      <a href="#">DSGVO</a>
+      <a href="#">Sicherheit</a>
+      <a href="#">Zertifikate</a>
+    </div>
+    <div class="footer-col">
+      <h4>Unternehmen</h4>
+      <a href="#">Über uns</a>
+      <a href="#">Kontakt</a>
+      <a href="#">Blog</a>
+      <a href="#">Impressum</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <span>© 2025 Lyan GmbH · Zürich, Schweiz</span>
+      <span>Datenschutz · Impressum · AGB</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
